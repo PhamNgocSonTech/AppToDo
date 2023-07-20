@@ -1,11 +1,16 @@
 <template>
-  <h1>Hello Son</h1>
+ <ToDoList/>
+  <router-view></router-view>
 </template>
 
 <script>
+import ToDoList from "@/components/ToDoList.vue";
+
+// import Error from "@/pages/Error.vue";
+
 export default {
   name: "App",
-  components: {},
+  components: {ToDoList},
 };
 </script>
 
