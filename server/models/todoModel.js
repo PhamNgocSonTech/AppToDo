@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
+const User = require("./userModel")
 
-const todoSchema = mongoose.Schema({
+const todoSchema = new mongoose.Schema({
   task: {
     type: String,
     max: 500,
   },
   userId: {
-    type: mongoose.Types.ObjectId,
-    ref: "user",
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   },
   completed: {
@@ -24,5 +25,5 @@ const todoSchema = mongoose.Schema({
   },
 });
 
-const Todo = mongoose.model("Todo", todoSchema);
+const Todo= mongoose.model("Todo", todoSchema);
 module.exports = Todo;

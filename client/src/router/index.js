@@ -5,15 +5,32 @@ import Login from "@/pages/Login.vue";
 import Register from "@/pages/Register.vue";
 import Error from "@/pages/Error.vue";
 
-const initRoutes = [
-  {path: '/', component: Dashboard},
-  {path: '/register', component: Register},
-  {path: '/login', component: Login},
-  {path: '/:pathMatch(.*)*', component: Error},
+const routes = [
+  {
+    path: '/',
+    name: 'Dashboard',
+    component: Dashboard
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
+  },
+
+  {
+    path: '/:pathMatch(.*)*',
+    component: Error
+  },
 ]
 
-const routers = createRouter({
+const router = createRouter({
   history: createWebHistory(),
-  routes: initRoutes
+  routes: routes
 })
-export default routers
+export default router

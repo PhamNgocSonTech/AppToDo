@@ -6,8 +6,8 @@ const UserStore = {
   },
 
   mutations: {
-    setUser(state, user) {
-      state.user = user;
+    setUser(state, userData) {
+      state.user = userData;
     },
     clearUser(state) {
       state.user = null;
