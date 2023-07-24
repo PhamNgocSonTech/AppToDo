@@ -35,23 +35,27 @@ const updateToDo = async (req, res) => {
 
 const deleteToDoId = async (req, res) => {
     try {
-        const todo = await ToDo.findById(req.params.id);
-        if (req.user._id !== todo.userId) {
-            res.status(403).json("Can't Delete To Do Other Account");
-        } else {
-            await todo.deleteOne();
-            res.status(200).json("Delete Successfully");
-        }
+        const {id} = req.params;
+        await ToDo.findOneAndDelete({_id: id});
+        res.json({message: "To Do Deleted Successfully"})
+        // const todo = await ToDo.findById(req.params.id);
+        // if (req.user._id !== todo.userId) {
+        //     res.status(403).json("Can't Delete To Do Other Account");
+        // } else {
+        //     await todo.deleteOne();
+        //     res.status(200).json("Delete Successfully");
+        // }
 
     } catch (err) {
         res.status(500).json(err);
     }
 }
 
-
 const deleteAllToDo = async (req, res) => {
     try {
-        await ToDo.deleteMany()
+        // await ToDo.deleteMany()
+        const {userId} = req.query;
+        await ToDo.deleteMany({userId})
         res.status(200).json("Delete Successful All To Do")
     } catch (error) {
         res.status(500).json(error)
@@ -70,6 +74,4 @@ const getAllToDo = async (req, res) => {
 
     }
 }
-
-
 module.exports = {createToDo, getAllToDo, updateToDo, deleteToDoId, deleteAllToDo};

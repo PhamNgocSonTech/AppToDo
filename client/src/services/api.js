@@ -33,7 +33,7 @@ export async function getToDos(token, userId) {
 }
 
 export async function createToDo(todo, token, userId) {
-  return axios.post(`${BASE_URL_API}/todos`, todo, {
+  return axios.post(`${BASE_URL_API}/todos/create`, todo, {
     headers: {
       "x-access-token": token,
     },
@@ -66,7 +66,7 @@ export async function updateToDo(todo, token) {
 }
 
 export async function deleteToDo(id, token) {
-  return axios.delete(`${BASE_URL_API}/todos/${id}`, {
+  return axios.delete(`${BASE_URL_API}/todos/delete/${id}`, {
     headers: {
       "x-access-token": token,
     }
@@ -78,7 +78,7 @@ export async function deleteToDo(id, token) {
 }
 
 export async function deleteAllToDo(token, userId) {
-  return axios.delete(`${BASE_URL_API}/todos/deleteAll/`, {
+  return axios.delete(`${BASE_URL_API}/todos/deleteAll`, {
     headers: {
       "x-access-token": token,
     },

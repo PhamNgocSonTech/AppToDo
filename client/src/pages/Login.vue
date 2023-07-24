@@ -28,7 +28,8 @@
                     </div>
 
                     <div class="form-outline mb-4">
-                      <input v-model="password" type="password" id="form2Example27" class="form-control form-control-lg"/>
+                      <input v-model="password" type="password" id="form2Example27"
+                             class="form-control form-control-lg"/>
                       <label class="form-label" for="form2Example27">Password</label>
                     </div>
 
@@ -58,11 +59,15 @@
 <script setup>
 import {ref, onMounted} from "vue";
 import {loginUser} from "@/services/api";
-import router from '../router/index'
+import router from '../router/index';
 import store from "@/store/store";
+import {useToast} from 'vue-toast-notification';
+// import {toastMixin} from "@/mixins/toastMixin";
 
 const email = ref("");
 const password = ref("")
+const toast = useToast();
+// const {showNotification} = toastMixin
 
 onMounted(() => {
   const storeUserData = localStorage.getItem("userData");
@@ -88,10 +93,22 @@ const login = async () => {
     }
     localStorage.setItem("userData", JSON.stringify(userData));
     store.commit("setUser", userData);
+    toast.open({
+      message: 'Login Success',
+      type: 'success',
+      position: 'top',
+      duration: 1500
+    })
     router.push({name: "Dashboard"});
   } catch (err) {
     console.log("Login Failed", err)
-
+    toast.open({
+      message: 'Check Username and Password',
+      type: 'error',
+      position: 'top',
+      duration: 1500
+    })
+    // showNotification("Login Failed", "Check Username and Password", "error")
   }
 };
 
@@ -99,9 +116,7 @@ const onFormSubmit = () => {
   console.log("onFormSubmit")
   login();
 }
-// export default ({
-//   name: "Login"
-// })
+
 </script>
 
 <style scoped>

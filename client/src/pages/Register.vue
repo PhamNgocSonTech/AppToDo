@@ -64,23 +64,18 @@ import {ref, onMounted} from "vue";
 import {registerUser} from "@/services/api";
 import router from "@/router";
 import store from "@/store/store";
+import {useToast} from "vue-toast-notification";
 
 const name = ref("");
 const password = ref("");
 const email = ref("")
+const toast = useToast();
 
 onMounted(() => {
 
   if (store.getters.user != null) {
     router.push({name: "Dashboard"})
   }
-  // let instance = this.$toast.open('You did it!');
-  //
-  // // Force dismiss specific toast
-  // instance.dismiss();
-  //
-  // // Dismiss all opened toast immediately
-  // this.$toast.clear();
 })
 
 const register = async () => {
@@ -89,7 +84,6 @@ const register = async () => {
     name: name.value,
     password: password.value
   };
-
   try {
     const response = await registerUser(user);
     const {_id, email, token} = response;
@@ -98,17 +92,24 @@ const register = async () => {
       email,
       token,
     }
-
     localStorage.setItem("userData", JSON.stringify(userData));
-
     store.commit("setUser", userData);
-
     router.push({name: "Dashboard"});
-
+    toast.open({
+      message: 'Register Success!! Login Now',
+      type: 'success',
+      position: 'top',
+      duration: 1500
+    })
   } catch (err) {
+    toast.open({
+      message: 'Register Failed',
+      type: 'success',
+      position: 'top',
+      duration: 1500
+    })
     console.log("Register Failed", err)
   }
-
 }
 
 const onFormSubmit = () => {
