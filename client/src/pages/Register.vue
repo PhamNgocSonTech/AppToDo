@@ -92,9 +92,9 @@ const register = async () => {
       email,
       token,
     }
-    localStorage.setItem("userData", JSON.stringify(userData));
+    // localStorage.setItem("userData", JSON.stringify(userData));
     store.commit("setUser", userData);
-    router.push({name: "Dashboard"});
+    router.push({name: "Login"});
     toast.open({
       message: 'Register Success!! Login Now',
       type: 'success',
@@ -104,7 +104,7 @@ const register = async () => {
   } catch (err) {
     toast.open({
       message: 'Register Failed',
-      type: 'success',
+      type: 'error',
       position: 'top',
       duration: 1500
     })

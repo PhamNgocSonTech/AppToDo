@@ -88,6 +88,9 @@ onMounted(() => {
       store.commit("setUser", userData)
     }
     fetchToDos(userData.token, userData._id)
+
+    console.log("User Data ID", userData._id)
+
   } catch (err) {
     console.log("Failed Parsing User Data", err)
     router.push({name: "Login"})
