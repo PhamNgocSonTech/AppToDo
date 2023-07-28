@@ -99,14 +99,14 @@ const register = async () => {
       message: 'Register Success!! Login Now',
       type: 'success',
       position: 'top',
-      duration: 1500
+      duration: 2500
     })
   } catch (err) {
     toast.open({
       message: 'Register Failed',
       type: 'error',
       position: 'top',
-      duration: 1500
+      duration: 2500
     })
     console.log("Register Failed", err)
   }
