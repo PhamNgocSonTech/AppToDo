@@ -69,7 +69,7 @@ import store from "@/store/store";
 import router from "@/router";
 import {getToDos, createToDo, updateToDo, deleteToDo, deleteAllToDo} from "@/services/api";
 import {useToast} from "vue-toast-notification";
-
+import Cookies from 'js-cookie'
 const todoList = ref([]);
 const newToDo = ref("")
 const toast = useToast();
@@ -88,9 +88,6 @@ onMounted(() => {
       store.commit("setUser", userData)
     }
     fetchToDos(userData.token, userData._id)
-
-    console.log("User Data ID", userData._id)
-
   } catch (err) {
     console.log("Failed Parsing User Data", err)
     router.push({name: "Login"})
@@ -99,11 +96,19 @@ onMounted(() => {
 
 const fetchToDos = async (token, userId) => {
   try {
-    const res = await getToDos(token, userId);
-    todoList.value = res;
-    console.log("Success Fetching To Do")
+      const res = await getToDos(token, userId);
+      console.log("res:",res)
+      todoList.value = res;
+      console.log("Success Fetching To Do")
   } catch (err) {
     console.log("Failed Fetching To Do", err)
+    toast.open({
+      message: 'Session Expired Will Be Logout, Please LOGIN Again',
+      type: 'warning',
+      position: 'bottom-left',
+      duration: 1500
+    })
+    logout();
   }
 }
 
@@ -180,7 +185,7 @@ const deleteToDoTask = async (index) => {
       message: 'Failed Delete To Do',
       type: 'error',
       position: 'top',
-      duration: 1500
+      duration: 10000
     })
     console.log("Failed Delete To Do", err)
   }
@@ -210,6 +215,7 @@ const deleteAllToDoTask = async () => {
 const logout = () => {
   try {
     localStorage.removeItem("userData");
+    Cookies.remove('refreshToken')
     store.commit("setUser", null);
     router.push({name: "Login"})
     toast.open({
@@ -222,6 +228,33 @@ const logout = () => {
     console.log("Something Wrong", err)
   }
 }
+
+// const autoLogout = () => {
+//   try {
+//     const date = new Date()
+//     const seconds = 1000;
+//     const time = date.getTime();
+//     const accessToken = localStorage.getItem('userData');
+//     if(accessToken.exp < Math.round(time /seconds)){
+//       console.log("AT Time: ", accessToken.exp)
+//       console.log("Time now: ",Math.round(time /seconds))
+//       logout();
+//       // return;
+//     }
+//     // axios.interceptors.response.use(
+//     //   (response) => response,
+//     //   (error) => {
+//     //     if(error.response && error.response.status === 401) {
+//     //       logout();
+//     //     }
+//     //     return Promise.reject(error)
+//     //   }
+//     // )
+//
+//   }catch (err) {
+//     console.log(err)
+//   }
+// }
 </script>
 <style scoped>
 .isCompleted {

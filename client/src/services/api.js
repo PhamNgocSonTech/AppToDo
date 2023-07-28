@@ -16,6 +16,14 @@ export async function loginUser(userData) {
     })
 }
 
+export async function logoutUser (refreshToken) {
+  return axios.post(`${BASE_URL_API}/users/logout`, {refreshToken})
+    .then(({data}) => data)
+    .catch(error => {
+      throw error
+    })
+}
+
 export async function getToDos(token, userId) {
   return axios.get(`${BASE_URL_API}/todos`, {
     headers: {

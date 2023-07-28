@@ -54,18 +54,19 @@ const loginUser = async (req, res) => {
         if (user && (await bcrypt.compare(password, user.password))) {
             // Create token
             // Save user token
-            // user.token = jwt.sign(
-            //     {
-            //         user_id: user._id,
-            //         email
-            //     },
-            //     process.env.JWT_KEY,
-            //     {
-            //         expiresIn: process.env.JWT_EXPIRED,
-            //     }
-            // );
-            const accessToken = generatorAccessToken(user);
+            user.token = jwt.sign(
+                {
+                    user_id: user._id,
+                    email
+                },
+                process.env.JWT_KEY,
+                {
+                    expiresIn: process.env.JWT_EXPIRED,
+                }
+            );
+            // const accessToken = generatorAccessToken(user);
             const refreshToken = generatorRefreshToken(user);
+            console.log("refresh token:", refreshToken);
             refreshTokenArr.push(refreshToken)
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
@@ -74,7 +75,7 @@ const loginUser = async (req, res) => {
                 sameSite: 'strict'
             })
             // Send user response
-            return res.status(200).json({user, accessToken});
+            return res.status(200).json(user);
         }
         // Invalid credentials
         return res.status(400).send("Invalid Credentials");
@@ -86,16 +87,22 @@ const loginUser = async (req, res) => {
 const requestRefreshToken = async (req, res) => {
     try {
         const getRefreshToken = req.cookies.refreshToken;
-        console.log("Get RT:", getRefreshToken)
-        if(!getRefreshToken || !refreshTokenArr.includes(getRefreshToken) ) res.status(401).json("You Can Not Authorization");
-        // if(!refreshTokenArr.includes(getRefreshToken)) res.status(401).json("Token Is Valid");
-
+        if(!getRefreshToken || !refreshTokenArr.includes(getRefreshToken) ) res.status(401).json("Refresh Token Can Not Authorization");
         jwt.verify(getRefreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
-            if(err) {
-                res.status(500).json({msg: "Invalid Refresh Token"})
-            }
+            if(err) res.status(401).json({msg: "Invalid Refresh Token"})
+
             refreshTokenArr = refreshTokenArr.filter((token) => token !== getRefreshToken)
-            const newAccessToken = generatorAccessToken(user);
+            // const newAccessToken = generatorAccessToken(user);
+            const newAccessToken = jwt.sign(
+                {
+                    user_id: user._id,
+                    email: user.email
+                },
+                process.env.JWT_KEY,
+                {
+                    expiresIn: process.env.JWT_EXPIRED,
+                }
+            );
             const newRefreshToken = generatorRefreshToken(user);
 
             refreshTokenArr.push(newRefreshToken);
@@ -106,7 +113,7 @@ const requestRefreshToken = async (req, res) => {
                 path: "/",
                 sameSite: "strict"
             })
-            res.status(200).json({accessToken: newAccessToken})
+            res.status(200).json({newAccessToken})
         } )
     }catch (err) {
         res.status(500).json({msg: err.message})
