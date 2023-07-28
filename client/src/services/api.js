@@ -1,6 +1,7 @@
 import axios from "axios";
-const BASE_URL_API = process.env.VUE_APP_BASE_URL_API;
+// const BASE_URL_API = process.env.VUE_APP_BASE_URL_API;
 // const BASE_URL_API = 'http://localhost:3000/api/v1';
+const BASE_URL_API = 'https://uptodo.onrender.com/api/v1';
 export async function registerUser(userData) {
   return axios.post(`${BASE_URL_API}/users/register`, userData)
     .then(({data}) => data)
