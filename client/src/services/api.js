@@ -57,13 +57,27 @@ export async function createToDo(todo, token, userId) {
     })
 }
 
-export async function updateToDo(todo, token) {
+export async function checkToDo(todo, token) {
   if (todo.completed) {
     todo.completed_time = Date.now();
   } else {
     todo.completed_time = null;
   }
+  // todo.task = newTask;
+  return axios.put(`${BASE_URL_API}/todos/update/${todo._id}`, todo, {
+    headers: {
+      "x-access-token": token,
+    }
+  })
+    .then(({data}) => data)
+    .catch(error => {
+      throw error
+    })
+}
 
+export async function updateToDoAxios(todo, token, newTask) {
+    todo.task = newTask;
+  // todo.task = newTask;
   return axios.put(`${BASE_URL_API}/todos/update/${todo._id}`, todo, {
     headers: {
       "x-access-token": token,

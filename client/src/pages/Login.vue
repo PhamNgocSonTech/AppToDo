@@ -60,13 +60,26 @@
 import {ref, onMounted} from "vue";
 import {loginUser} from "@/services/api";
 import router from '../router/index';
-import store from "@/store/store";
+import store from "@/store/user";
 import {useToast} from 'vue-toast-notification';
 // import {toastMixin} from "@/mixins/toastMixin";
 
 const email = ref("");
 const password = ref("")
 const toast = useToast();
+import {useLoading} from 'vue-loading-overlay';
+const loading = useLoading({
+  isFullPage: true,
+  loader: 'bars',
+  canCancel: false,
+  color: '#3ac569',
+  backgroundColor: '#e4e7ec',
+  width: 100,
+  height: 100,
+})
+const showLoadingOverlay = () => {
+  return loading.show()
+}
 // const {showNotification} = toastMixin
 
 onMounted(() => {
@@ -83,6 +96,7 @@ const login = async () => {
     email: email.value,
     password: password.value
   };
+  const loader =  showLoadingOverlay()
   try {
     const response = await loginUser(user);
     const {token, email, _id} = response;
@@ -109,11 +123,15 @@ const login = async () => {
       duration: 1500
     })
     // showNotification("Login Failed", "Check Username and Password", "error")
+  }finally {
+    loader.hide();
+
   }
 };
 
 const onFormSubmit = () => {
   console.log("onFormSubmit")
+  // showLoadingOverlay()
   login();
 }
 

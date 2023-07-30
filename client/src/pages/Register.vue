@@ -62,28 +62,58 @@
 <script setup>
 import {ref, onMounted} from "vue";
 import {registerUser} from "@/services/api";
-import router from "@/router";
-import store from "@/store/store";
 import {useToast} from "vue-toast-notification";
+import {useLoading} from 'vue-loading-overlay';
+// import StoreLoading from "@/store/loading";
+// import LoadingOverlay from 'vue-loading-overlay';
+
+
+import router from "@/router";
+import StoreUser from "@/store/user";
+// import loading from "@/store/loading";
 
 const name = ref("");
 const password = ref("");
 const email = ref("")
 const toast = useToast();
 
+const fullPage = ref(true)
+// const isLoading = ref(false);
+
+const loading = useLoading({
+  isFullPage: fullPage,
+  loader: 'bars',
+  canCancel: false,
+  color: '#3ac569',
+  backgroundColor: '#e4e7ec',
+  width: 100,
+  height: 100,
+})
+const showLoadingOverlay = () => {
+  return loading.show()
+}
+
 onMounted(() => {
 
-  if (store.getters.user != null) {
+  if (StoreUser.getters.user != null) {
     router.push({name: "Dashboard"})
   }
 })
 
+// const showLoading = () => {
+//   // isLoading.value = true;
+//   $loading.show()
+// }
+// // const hideLoading = () => {
+//   isLoading.value = false;
+// }
 const register = async () => {
   const user = {
     email: email.value,
     name: name.value,
     password: password.value
   };
+    const loader = showLoadingOverlay();
   try {
     const response = await registerUser(user);
     const {_id, email, token} = response;
@@ -93,7 +123,7 @@ const register = async () => {
       token,
     }
     // localStorage.setItem("userData", JSON.stringify(userData));
-    store.commit("setUser", userData);
+    StoreUser.commit("setUser", userData);
     router.push({name: "Login"});
     toast.open({
       message: 'Register Success!! Login Now',
@@ -109,15 +139,19 @@ const register = async () => {
       duration: 2500
     })
     console.log("Register Failed", err)
+  }finally {
+    loader.hide();
   }
 }
 
 const onFormSubmit = () => {
+  // $loading.show()
   register();
 }
 
 </script>
 
 <style scoped>
+@import 'vue-loading-overlay/dist/css/index.css';
 
 </style>
