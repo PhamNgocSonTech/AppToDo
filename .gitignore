@@ -7,4 +7,3 @@
 /client/src/store/modules/loadingModules.js
 /client/src/store/modules/
 /client/src/components/LoadingOverlay.vue
-/client/src/store/loading.js
