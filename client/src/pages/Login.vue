@@ -63,11 +63,12 @@ import router from '../router/index';
 import store from "@/store/user";
 import {useToast} from 'vue-toast-notification';
 // import {toastMixin} from "@/mixins/toastMixin";
+import {useLoading} from 'vue-loading-overlay';
 
 const email = ref("");
 const password = ref("")
 const toast = useToast();
-import {useLoading} from 'vue-loading-overlay';
+let loader;
 const loading = useLoading({
   isFullPage: true,
   loader: 'bars',
@@ -96,8 +97,8 @@ const login = async () => {
     email: email.value,
     password: password.value
   };
-  const loader =  showLoadingOverlay()
   try {
+    loader = showLoadingOverlay();
     const response = await loginUser(user);
     const {token, email, _id} = response;
     const userData = {
@@ -111,7 +112,7 @@ const login = async () => {
       message: 'Login Success',
       type: 'success',
       position: 'top',
-      duration: 1500
+      duration: 2000
     })
     router.push({name: "Dashboard"});
   } catch (err) {
@@ -120,7 +121,7 @@ const login = async () => {
       message: 'Check Username and Password',
       type: 'error',
       position: 'top',
-      duration: 1500
+      duration: 2000
     })
     // showNotification("Login Failed", "Check Username and Password", "error")
   }finally {

@@ -100,15 +100,13 @@
   } from "@/services/api";
   import {useToast} from "vue-toast-notification";
   import Cookies from 'js-cookie'
-
   import 'vue-loading-overlay/dist/css/index.css';
-
-
   const todoList = ref([]);
   const newToDo = ref("")
   const toast = useToast();
   const isUpdate = ref(-1);
   const updateTask = ref('');
+  let loader;
 
   // const loading = useLoading();
   import {useLoading} from 'vue-loading-overlay';
@@ -155,7 +153,7 @@
   })
 
   const fetchToDos = async (token, userId) => {
-        const loader = showLoadingOverlay()
+        loader = showLoadingOverlay()
     try {
         const res = await getToDos(token, userId);
         console.log("res:",res)
@@ -183,7 +181,7 @@
       created_at: Date.now(),
       completed_time: null
     };
-    const loader = showLoadingOverlay();
+    // loader = showLoadingOverlay();
     try {
       await createToDo(todo, store.getters.user.token, store.getters.user._id);
       fetchToDos(store.getters.user.token, store.getters.user._id);
@@ -192,7 +190,7 @@
         message: 'Add To Do Success',
         type: 'success',
         position: 'top',
-        duration: 1500
+        duration: 2000
       })
       console.log("Add To Do Success")
     } catch (err) {
@@ -200,11 +198,11 @@
         message: 'Error Add To Do"',
         type: 'error',
         position: 'top',
-        duration: 1500
+        duration: 2000
       })
       console.log("Error Add To Do", err)
     }finally {
-      loader.hide();
+      // loader.hide();
       // isLoading.value = false;
 
     }
@@ -230,21 +228,21 @@
         message: 'Success Check To Do',
         type: 'info',
         position: 'bottom-left',
-        duration: 1000
+        duration: 2000
       })
     } catch (err) {
       toast.open({
         message: 'Failed Check To Do',
         type: 'error',
         position: 'bottom-left',
-        duration: 1000
+        duration: 2000
       })
       console.log("Error Check To Do: ", err)
     }
   }
 
   const updateToDoTask = async () => {
-    const loader = showLoadingOverlay()
+    loader = showLoadingOverlay()
     try {
       const todo = todoList.value[isUpdate.value];
       await updateToDoAxios(todo, store.getters.user.token, updateTask.value)
@@ -252,7 +250,7 @@
         message: 'Success Update To Do',
         type: 'success',
         position: 'bottom-left',
-        duration: 1000
+        duration: 2000
       })
       cancelUpdateTask();
     } catch (err) {
@@ -260,7 +258,7 @@
         message: 'Failed Update To Do',
         type: 'error',
         position: 'bottom-left',
-        duration: 1000
+        duration: 2000
       })
       console.log("Error Update To Do: ", err)
     }finally {
@@ -268,7 +266,7 @@
     }
   }
   const deleteToDoTask = async (index) => {
-    const loader = showLoadingOverlay();
+    loader = showLoadingOverlay();
     try {
       await deleteToDo(todoList.value[index]._id, store.getters.user.token);
       todoList.value.splice(index, 1);
@@ -293,7 +291,7 @@
   }
 
   const deleteAllToDoTask = async () => {
-    const loader = showLoadingOverlay()
+    loader = showLoadingOverlay()
     try {
       await deleteAllToDo(store.getters.user.token, store.getters.user._id);
       todoList.value = [];

@@ -74,10 +74,10 @@ import StoreUser from "@/store/user";
 
 const name = ref("");
 const password = ref("");
-const email = ref("")
+const email = ref("");
 const toast = useToast();
-
-const fullPage = ref(true)
+const fullPage = ref(true);
+let loader;
 // const isLoading = ref(false);
 
 const loading = useLoading({
@@ -113,7 +113,7 @@ const register = async () => {
     name: name.value,
     password: password.value
   };
-    const loader = showLoadingOverlay();
+    loader = showLoadingOverlay();
   try {
     const response = await registerUser(user);
     const {_id, email, token} = response;
