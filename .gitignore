@@ -1,6 +1,9 @@
 /server/node_modules
 /server/.env
 /client/node_modules
-/client/.env
+/client/.env.production
 /client/src/mixins/toastMixin.js
-/server/services/JWT.js
+/client/.env.production
+/client/src/store/modules/loadingModules.js
+/client/src/store/modules/
+/client/src/components/LoadingOverlay.vue
